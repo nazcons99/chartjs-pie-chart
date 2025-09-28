@@ -1,0 +1,66 @@
+
+document.addEventListener("DOMContentLoaded", showPieChart)
+
+function showPieChart(){
+    console.log("pie--chart on load");
+
+    let sliceA={ size: 450, color: "blue"};
+    let sliceb={ size:550, color: "green"};
+
+    const values=[sliceA.size, sliceb.size];
+
+    const total= values.reduce((acc, val)=> acc+val, 0);
+
+    let startAngle = 0;
+
+    //values of the pie chart %
+
+    const canvas= document.getElementById("pie-chart");
+    const ctx = canvas.getContext("2d");
+    //calculate Angules
+
+    values.forEach((values, index)=>{
+        const angle = (values/total) * Math.PI *2;
+
+        //Draw a slice
+        ctx.beginPath();
+        ctx.moveTo(canvas.width/2, canvas.height/2);
+        ctx.arc(
+            canvas.width /2,
+            canvas.height / 2,
+            canvas.width / 2,
+            startAngle,
+            startAngle + angle
+        );
+        ctx.closePath();
+
+        ctx.fillStyle = index ==0 ? sliceA.color: sliceb.color;
+        ctx.fill();
+        startAngle +=angle;
+    });
+
+    //Show Legend
+
+    const legend = document.getElementById("pie-chart-legend");
+
+   legend.innerHTML = `
+  <div class="legend-item">
+    <div class="legend-color" style="background-color: ${sliceA.color}"></div>
+    <div class="legend-label">
+      Total invested: $${sliceA.size} - ${(
+        (sliceA.size / total) * 100
+      ).toFixed(2)} %
+    </div>
+  </div>
+
+  <div class="legend-item">
+    <div class="legend-color" style="background-color: ${sliceb.color}"></div>
+    <div class="legend-label">
+      Total portfolio: $${sliceb.size} - ${(
+        (sliceb.size / total) * 100
+      ).toFixed(2)} %
+    </div>
+  </div>
+`
+    }
+    
